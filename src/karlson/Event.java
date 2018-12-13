@@ -1,14 +1,14 @@
 package karlson;
 
 class Event implements Observable{
-    private static Weather currentWeather;
+
     private double chance;
     private double efficiency;
+    private static double multiplier;
     private String description;
     Event(String description, double chance, double efficiency) {
-        currentWeather = Weather.CLEAR;
-        this.chance = chance  * currentWeather.getMultiplier();
-        this.efficiency = efficiency  * currentWeather.getMultiplier();
+        this.chance = chance * multiplier;
+        this.efficiency = efficiency * multiplier;
         this.description = description;
     }
 
@@ -36,8 +36,8 @@ class Event implements Observable{
         this.efficiency = efficiency;
     }
 
-    protected static void setCurrentWeather(Weather weather){
-        currentWeather = weather;
+    protected static void setMultiplier(double multiplier){
+         Event.multiplier = multiplier;
     }
 
     @Override

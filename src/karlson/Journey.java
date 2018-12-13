@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 public class Journey {
     private int stepCounter = 0;
+    private Weather currentWeather;
     private Kid kid;
     private Karlson karlson;
     private Event[] events = {};
@@ -12,6 +13,11 @@ public class Journey {
     public Journey(Kid kid, Karlson karlson){
         this.kid = kid;
         this.karlson = karlson;
+    }
+
+    {
+        currentWeather = selectWeather();
+        Event.setMultiplier(currentWeather.getMultiplier());
     }
 
     private Weather selectWeather(){
@@ -38,7 +44,6 @@ public class Journey {
 
     public void start(){
         objects[0] = kid; objects[1] = karlson;
-        Event.setCurrentWeather(selectWeather());
         System.out.println("Приключение начинается!\n");
         addEvent(new Event("Ничего не произошло, %2$s и %2s спокойно идут дальше.", 1.0f, 0.0f));
         while (karlson.getMood() > 50.0f && kid.getPulse() <= 110.0f) {
@@ -52,6 +57,7 @@ public class Journey {
                 }
             }
 
+            System.out.println(karlson.getPropellerColour());
             System.out.printf("### Шаг %d ###\n", stepCounter);
 
             karlson.go();

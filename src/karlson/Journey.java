@@ -9,7 +9,7 @@ public class Journey {
     private Karlson karlson;
     private Event[] events = {};
     private Event event;
-    private Observable[] objects = new Observable[3];
+    private Observable[] objects = new Observable[4];
     public Journey(Kid kid, Karlson karlson){
         this.kid = kid;
         this.karlson = karlson;
@@ -48,16 +48,15 @@ public class Journey {
         addEvent(new Event("Ничего не произошло, %2$s и %2s спокойно идут дальше.", 1.0f, 0.0f));
         while (karlson.getMood() > 50.0f && kid.getPulse() <= 110.0f) {
             stepCounter += 1;
-
+            objects[2] = Sounds.getRandomSound();
             for (Event d : events) { //Определяется угроза
                 if (d.getChance() > Math.random()) {
                     event = d;
-                    objects[2] = d;
+                    objects[3] = d;
                     break;
                 }
             }
 
-            System.out.println(karlson.getPropellerColour());
             System.out.printf("### Шаг %d ###\n", stepCounter);
 
             karlson.go();

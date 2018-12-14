@@ -6,10 +6,15 @@ class Event implements Observable{
     private double efficiency;
     private static double multiplier;
     private String description;
-    Event(String description, double chance, double efficiency) {
-        this.chance = chance * multiplier;
-        this.efficiency = efficiency * multiplier;
-        this.description = description;
+    Event(String description, double chance, double efficiency) throws IllegalEventException{
+        if (chance <= 1.0f && chance >= 0) {
+            this.chance = chance * multiplier;
+            this.efficiency = efficiency * multiplier;
+            this.description = description;
+        }
+        else {
+            throw new IllegalEventException();
+        }
     }
 
     protected String returnDescription(boolean positive, Kid kid, Karlson karlson){

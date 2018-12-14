@@ -10,6 +10,13 @@ public class Journey {
     private Event[] events = {};
     private Event event;
     private Observable[] objects = new Observable[4];
+    private Event safiety = new Event("Ничего не произошло, %2$s и %2s спокойно идут дальше.", 1.0f, -5.0f){
+
+        @Override
+        protected double getEfficiency(){
+            return super.getEfficiency()*Math.random();
+        }
+    };
 
     public Journey(Kid kid, Karlson karlson) {
         this.kid = kid;
@@ -46,7 +53,7 @@ public class Journey {
 
             objects[0] = kid;
             objects[1] = karlson;
-            addEvent(new Event("Ничего не произошло, %2$s и %2s спокойно идут дальше.", 1.0f, 0.0f));
+            addEvent(safiety);
             System.out.printf("Погода %1$s\n",currentWeather.getName());
             System.out.println("Приключение начинается!\n");
 

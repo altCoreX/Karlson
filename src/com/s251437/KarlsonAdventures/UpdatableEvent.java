@@ -1,49 +1,48 @@
-package karlson;
+package com.s251437.KarlsonAdventures;
 
 
-public class UpdatableEvent extends Event implements Updatable{
+public class UpdatableEvent extends Event implements Updatable {
 
     private String name;
     private String negativeDescription;
 
     public UpdatableEvent(String name) {
-        super("%1$s оступился, но %2$s поймал его. %1$s напуган, а %2$s довольно смеется.",Math.random()/10+0.15f, Math.random()*6 + 4);
+        super("%1$s оступился, но %2$s поймал его. %1$s напуган, а %2$s довольно смеется.", Math.random() / 10 + 0.15f, Math.random() * 6 + 4);
         this.name = name;
         negativeDescription = "%1$s и %2$s миновали опасность.\n";
     }
 
     public UpdatableEvent(String name, String description) {
-        super(description,Math.random()/10+0.15f, Math.random()*6 + 4);
+        super(description, Math.random() / 10 + 0.15f, Math.random() * 6 + 4);
         this.name = name;
         negativeDescription = "%1$s и %2$s миновали опасность.\n";
     }
 
     public UpdatableEvent(String name, String description, String negativeDescription) {
-        super(description,Math.random()/10+0.15f, Math.random()*6 + 4);
+        super(description, Math.random() / 10 + 0.15f, Math.random() * 6 + 4);
         this.name = name;
         this.negativeDescription = negativeDescription;
     }
 
     @Override
-    public String returnState(){
-        return String.format("%1$s подкрадывается, шанс провалиться %2$.2f процентов, длина %3$.2fм.", name, getChance()*100, getEfficiency());
+    public String returnState() {
+        return String.format("%1$s подкрадывается, шанс провалиться %2$.2f процентов, длина %3$.2fм.", name, getChance() * 100, getBuff());
     }
 
     @Override
-    protected String returnDescription(boolean positive, Kid kid, Karlson karlson){
+    protected String returnDescription(boolean positive, Kid kid, Karlson karlson) {
         updateStats();
-        if(positive) {
+        if (positive) {
             return String.format(getDescription(), kid.getName(), karlson.getName());
-        }
-        else {
+        } else {
             return String.format(negativeDescription, kid.getName(), karlson.getName());
         }
     }
 
     @Override
     public void updateStats() {
-        setChance(Math.random()/10+0.15f);
-        setEfficiency(Math.random()*6 + 4);
+        setChance(Math.random() / 10 + 0.15f);
+        setBuff(Math.random() * 6 + 4);
     }
 
     @Override

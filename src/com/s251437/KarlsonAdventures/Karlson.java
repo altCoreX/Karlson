@@ -1,31 +1,34 @@
-package karlson;
+package com.s251437.KarlsonAdventures;
 
-public class Karlson extends Person{
+public class Karlson extends Person {
 
-    private double mood = 60.0f;
+    private double mood = 100.0f;
     private Propeller propeller = new Propeller("красный", 17.3f);
-    public Karlson(String name){
-        super(name);
+
+    public Karlson(String name, byte age) {
+        super(name, age);
     }
 
-    private class Propeller{
+    private class Propeller {
         private String colour;
         private double diameter;
+
         private Propeller(String colour, double diameter) {
             this.colour = colour;
             this.diameter = diameter;
         }
-            private String getColour() {
-                return colour;
-            }
 
-            private void setColour(String colour){
+        private String getColour() {
+            return colour;
+        }
+
+        private void setColour(String colour) {
             this.colour = colour;
-            }
+        }
 
-            private double getDiameter(){
+        private double getDiameter() {
             return diameter;
-            }
+        }
     }
 
     public String getPropellerColour() {
@@ -36,46 +39,45 @@ public class Karlson extends Person{
         propeller.setColour(colour);
     }
 
-    public double getPropellerDiameter(){
+    public double getPropellerDiameter() {
         return propeller.getDiameter();
     }
 
-    public void setPropeller(String colour, double diameter){
+    public void setPropeller(String colour, double diameter) {
         propeller = new Propeller(colour, diameter);
     }
 
-    public double getMood(){
+    public double getMood() {
         return mood;
     }
 
     @Override
-    public void go(){
+    public void go() {
+        if(getPulse() > 100){
+            mood+= getPulse()-100;
+        }
+        super.go();
         mood -= 5.0f;
     }
 
     @Override
-    public void beInDanger(Event event){
-        mood+= event.getEfficiency()*1.5f;
+    public void applyBuff(double buff) {
+        super.applyBuff(buff);
+        mood += buff * 0.4f;
     }
 
     @Override
-    public String returnState(){
+    public String returnState() {
         return String.format("%s делает шаг. Уровень настроения равен: %.2f", getName(), this.mood);
     }
 
     @Override
     public int hashCode() {
-        return super.hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        return super.equals(obj);
+        return String.format("Карлсон %s %d", this.getName(), this.getAge()).hashCode();
     }
 
     @Override
     public String toString() {
-        return super.toString();
+        return String.format("%1$s: пульс: %2$d", getName(), getMood());
     }
-
 }

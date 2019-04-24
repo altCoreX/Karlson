@@ -1,19 +1,19 @@
-package karlson;
+package com.s251437.KarlsonAdventures;
 
 class Event implements Observable{
 
     private double chance;
-    private double efficiency;
+    private double buff;
     private static double multiplier;
     private String description;
-    Event(String description, double chance, double efficiency) throws IllegalEventException{
-        if (chance <= 1.0f && chance >= 0) {
+    Event(String description, double chance, double buff) throws IllegalArgumentException {
+        if (chance <= 1.0f && chance >= 0.0f) {
             this.chance = chance * multiplier;
-            this.efficiency = efficiency * multiplier;
+            this.buff = buff * multiplier;
             this.description = description;
         }
         else {
-            throw new IllegalEventException();
+            throw new IllegalArgumentException();
         }
     }
 
@@ -33,12 +33,12 @@ class Event implements Observable{
         this.chance = chance;
     }
 
-    protected double getEfficiency(){
-        return efficiency;
+    protected double getBuff(){
+        return buff;
     }
 
-    protected void setEfficiency(double efficiency){
-        this.efficiency = efficiency;
+    protected void setBuff(double buff){
+        this.buff = buff;
     }
 
     protected static void setMultiplier(double multiplier){
@@ -48,6 +48,21 @@ class Event implements Observable{
     @Override
     public String returnState(){
         return "На горизонте чисто, ничего не предвещает беды.";
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Событие с шансом %1$d, эффективностью %2$d.", chance, buff);
     }
 
 }

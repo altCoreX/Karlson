@@ -1,9 +1,16 @@
 package com.s251437.KarlsonAdventures;
 
-public class Kid extends Person implements Updatable, Comparable<Kid> {
+import java.io.Serializable;
+import java.util.Comparator;
+
+public class Kid extends Person implements Updatable, Serializable, Comparable<Kid> {
 
     public Kid(String name, byte age) {
         super(name, age);
+    }
+
+    public String toJson(){
+        return String.format("{\"name\":\"%1$s\";\"age\":\"%2$d\"}", getName(), getAge());
     }
 
     @Override
@@ -12,7 +19,7 @@ public class Kid extends Person implements Updatable, Comparable<Kid> {
     }
 
     public int compareTo(Kid p){
-        return this.getAge() - p.getAge();
+        return Comparator.comparing(Kid::getName).thenComparing(Kid::getAge).compare(this, p);
     }
 
     @Override
@@ -23,6 +30,22 @@ public class Kid extends Person implements Updatable, Comparable<Kid> {
     @Override
     public String toString() {
         return String.format("%1$s: %2$d", getName(), getAge());
+    }
+
+    @Override
+    public int hashCode(){
+        int result;
+        return 2;
+    }
+
+    @Override
+    public boolean equals(Object obj){
+        if(obj instanceof Kid){
+            if (((Kid) obj).getAge() == this.getAge() && ((Kid) obj).getName().equals(this.getName())){
+                return true;
+            }
+        }
+        return false;
     }
 
 }

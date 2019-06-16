@@ -4,17 +4,18 @@ import com.s251437.KarlsonAdventures.Kid;
 
 import java.io.*;
 import java.util.*;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 public class CollectionManager {
-
-    private HashSet<Kid> collection;
+    private ConcurrentSkipListSet<Kid> collection;
     private Date initDate;
     private File fileForIO;
+
     private XmlReaderAndWriter manager = new XmlReaderAndWriter();
 
     CollectionManager(File collectionFile) {
         initDate = new Date();
-        collection = new HashSet<>();
+        collection = new ConcurrentSkipListSet<Kid>();
         if (collectionFile != null && !importFile(collectionFile)){
             fileForIO = collectionFile;
             importFile(fileForIO);
@@ -30,7 +31,7 @@ public class CollectionManager {
             System.exit(0);
         }
         initDate = new Date();
-        collection = new HashSet<>();
+        collection = new ConcurrentSkipListSet<Kid>();
         importFile(fileForIO);
     }
 
@@ -39,11 +40,11 @@ public class CollectionManager {
      * @param element   :(Kid) - element to remove.
      */
 
-    public void remove(Kid element){
+    public String remove(Kid element){
          if(collection.remove(element))
-            System.out.println("Элемент удален");
+            return "Элемент удален";
          else
-            System.out.println("Такого элемента не существует");
+            return "Такого элемента не существует";
 
     }
 
@@ -51,10 +52,8 @@ public class CollectionManager {
      * Method to show elements in collection.
      */
 
-    public void show(){
-        for(Kid item: collection){
-            System.out.println(item.toString());
-        }
+    public String show(){
+        return collection.toString();
     }
 
     /**
@@ -62,14 +61,12 @@ public class CollectionManager {
      * @param element   :(Kid) - element to compare.
      */
 
-    public void addIfMin(Kid element){
+    public String addIfMin(Kid element){
         if(element.compareTo(Collections.min(collection)) < 0)
             if(collection.add(element)){
-                System.out.println("Элемент добавлен.");
+                return "Элемент добавлен.";
             }
-            else {
-                System.out.println("Элемент не добавлен.");
-            }
+        return "Элемент не добавлен.";
     }
 
     /**
@@ -77,12 +74,12 @@ public class CollectionManager {
      * @param element   :(Kid) - element to add.
      */
 
-    public void add(Kid element) {
+    public String add(Kid element) {
         if (collection.add(element)) {
-            System.out.println("Элемент добавлен.");
+            return "Элемент добавлен.";
         }
         else {
-            System.out.println("Элемент не добавлен.");
+            return "Элемент не добавлен.";
         }
     }
 
@@ -108,8 +105,9 @@ public class CollectionManager {
      * @param element   :(Kid) - element to compare.
      */
 
-    public void removeLower(Kid element){
+    public String removeLower(Kid element){
         collection.removeIf(n -> n.compareTo(element) < 0);
+        return "Готово.";
     }
 
     /**
@@ -117,26 +115,35 @@ public class CollectionManager {
      * @param filename  :(String) - Name of file to import.
      */
 
-    public void importItem(String filename){
-        this.importFile(new File(filename));
+    public String importItem(String filename){
+        if(this.importFile(new File(filename))) {
+            return "Элементы добавлены.";
+        }
+        else {
+            return "Элементы не добавлены.";
+        }
     }
 
     /**
      * Method to display info about collection.
      */
 
-    public void info() {
-        System.out.println("Коллекция имеет тип HashSet и содержит объекты класса Kid");
-        System.out.println("Коллекция инициализировалась на основе следующих данных: " + initDate);
-        System.out.printf("Коллекция содержит %d элементов\n", collection.size());
+    public String info() {
+        return "Коллекция имеет тип ConcurrentSkipListSet и содержит объекты класса Kid\n" +
+                "Коллекция инициализировалась на основе следующих данных: " + initDate.toString() +
+                String.format("Коллекция содержит %d элементов\n", collection.size());
     }
 
     /**
      * Method to save collection and finish work.
      */
 
-    public void finishWork() {
-        System.out.println("Выполняется сохранение коллекции и закрытие программы.");
+    public String finishWork() {
         manager.write(collection, fileForIO);
+        return "Выполняется сохранение коллекции и закрытие программы.";
+    }
+
+    public ConcurrentSkipListSet<Kid> getCollection(){
+        return collection;
     }
 }

@@ -1,11 +1,11 @@
 package com.s251437.KarlsonAdventures.control;
 
-
-
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.s251437.KarlsonAdventures.Kid;
+import com.s251437.KarlsonAdventures.control.CollectionManager;
 
+import java.io.InputStream;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
@@ -19,26 +19,7 @@ public class CommandHandler {
         isStopped = false;
     }
 
-    private String[] readCommand() {
-        Scanner scanner = new Scanner(System.in);
-        String command;
 
-        try {
-            System.out.println("Введите команду");
-            command = scanner.nextLine();
-        } catch (NoSuchElementException ex) {
-            command = "stop";
-        }
-
-        /*if (fullCommand.length > 1) {
-            while (fullCommand[1].contains(" ")) {
-                fullCommand[1] = fullCommand[1].replaceAll(" ", " ");
-            }
-        }*/
-
-        return command.trim().split(" ", 2);
-
-    }
 
     private Kid getElementFromJSON(Gson gson, String elementInString) throws ReadElementFromJsonException, JsonSyntaxException {
         Kid element = gson.fromJson(elementInString, Kid.class);
@@ -55,10 +36,10 @@ public class CommandHandler {
         }
     }
 
-    public void control() {
-        while (!isStopped) {
-            String[] fullCommand = readCommand();
+    public String control(String command) {
+            String[] fullCommand = command.trim().split(" ", 2);;
             Gson gson = new Gson();
+            String answer;
 
             switch (fullCommand[0]) {
                 case "remove_lower":
@@ -69,48 +50,41 @@ public class CommandHandler {
                         Kid element = getElementFromJSON(gson, fullCommand[1]);
                         switch (fullCommand[0]) {
                             case "remove":
-                                manager.remove(element);
+                                return manager.remove(element);
                             case "remove_lower":
-                                manager.removeLower(element);
-                                break;
+                                return manager.removeLower(element);
                             case "add_if_min":
-                                manager.addIfMin(element);
-                                break;
+                                return manager.addIfMin(element);
                             case "add":
-                                manager.add(element);
-                                break;
+                                return manager.add(element);
                         }
                     } catch (JsonSyntaxException ex) {
-                        System.out.println("Ошибка, элемент задан неверно. Используйте формат JSON.");
+                        return "Ошибка, элемент задан неверно. Используйте формат JSON.";
                     } catch (ReadElementFromJsonException ex) {
-                        System.out.print(ex.toString());
+                        return ex.toString();
                     } catch (ArrayIndexOutOfBoundsException e) {
-                        System.out.println("Неверный аргумент.");
+                        return "Неверный аргумент.";
                     }
                     break;
                 case "import":
                     try {
-                        manager.importItem(fullCommand[1]);
+                        return manager.importItem(fullCommand[1]);
                     }
                     catch (ArrayIndexOutOfBoundsException e) {
-                        System.out.println("Неверный аргумент.");
+                        return "Неверный аргумент.";
                     }
-                    break;
                 case "info":
-                    manager.info();
-                    break;
+                    return manager.info();
                 case "show":
-                    manager.show();
-                    break;
+                    return manager.show();
                 case "stop":
                     manager.show();
                     isStopped = true;
-                    manager.finishWork();
-                    break;
+                    return manager.finishWork();
                 default:
-                    System.out.println("Ошибка, Неизвестная команда.");
-                    break;
+                    return "Ошибка, Неизвестная команда.";
+
             }
-        }
+        return "Ошибка, Неизвестная команда.";
     }
 }

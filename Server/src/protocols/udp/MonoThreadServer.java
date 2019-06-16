@@ -12,7 +12,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 
 
-public class MonoThreadServer implements Runnable {
+public class MonoThreadServer extends Thread {
     private DatagramChannel channel;
     private ByteBuffer in;
     private SocketAddress addr;

@@ -22,9 +22,9 @@ public class CollectionManager {
         }
     }
 
-    public CollectionManager() {
+    public CollectionManager(String env) {
         try{
-            fileForIO = new File(System.getenv("labFile"));
+            fileForIO = new File(System.getenv(env));
         }
         catch (NullPointerException e){
             System.out.println("Переменная окружения не задана.");

@@ -22,7 +22,7 @@ public class MultiThreadServer {
     public MultiThreadServer(int port) throws java.io.IOException{
         this.port = port;
         this.port = port;
-        this.manager = new CollectionManager();
+        this.manager = new CollectionManager("labFile");
         channel = DatagramChannel.open();
         address = new InetSocketAddress(port);
         socket = channel.socket();
@@ -41,7 +41,7 @@ public class MultiThreadServer {
                 SocketAddress addr = channel.receive(in);
                 System.out.println("Получено.");
                 MonoThreadServer thread = new MonoThreadServer(in, manager, channel, addr);
-                thread.run();
+                thread.start();
             }
             catch (IOException e){
                 System.out.println(e);

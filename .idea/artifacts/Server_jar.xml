@@ -1,0 +1,15 @@
+<component name="ArtifactManager">
+  <artifact name="Server:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Server_jar</output-path>
+    <root id="root">
+      <element id="archive" name="Server.jar">
+        <element id="directory" name="META-INF">
+          <element id="file-copy" path="$PROJECT_DIR$/Client/src/META-INF/MANIFEST.MF" />
+        </element>
+        <element id="module-output" name="Server" />
+        <element id="module-output" name="Karlson" />
+      </element>
+      <element id="library" level="project" name="com.google.code.gson:gson:2.8.0" />
+    </root>
+  </artifact>
+</component>

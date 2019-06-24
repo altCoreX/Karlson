@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<journey>
+    <visitors>
+        <visitor name="Гаврилов" age="40" />
+        <visitor name="Мартин" age="25" />
+        <visitor name="Письмак" age="30" />
+    </visitors>
+</journey>

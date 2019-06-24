@@ -1,0 +1,12 @@
+<component name="ArtifactManager">
+  <artifact name="Client:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Client_jar</output-path>
+    <root id="root">
+      <element id="archive" name="Client.jar">
+        <element id="module-output" name="Client" />
+        <element id="module-output" name="Karlson" />
+      </element>
+      <element id="library" level="project" name="com.google.code.gson:gson:2.8.0" />
+    </root>
+  </artifact>
+</component>

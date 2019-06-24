@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact name="Karlson:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Karlson_jar</output-path>
+    <root id="root">
+      <element id="archive" name="Karlson.jar">
+        <element id="module-output" name="Karlson" />
+      </element>
+      <element id="library" level="project" name="com.google.code.gson:gson:2.8.0" />
+    </root>
+  </artifact>
+</component>

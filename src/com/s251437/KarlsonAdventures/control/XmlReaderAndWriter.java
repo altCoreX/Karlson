@@ -16,6 +16,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.*;
 import java.util.Arrays;
+import java.util.Scanner;
 import java.util.concurrent.ConcurrentSkipListSet;
 
 public class XmlReaderAndWriter {
@@ -70,21 +71,13 @@ public class XmlReaderAndWriter {
         Document document;
         NodeList list;
         FileReader fileReader;
+        Scanner scan;
         char[] buf;
         String data;
         boolean imported = false;
         try {
             fileReader = new FileReader(importFile);
-            buf = new char[256];
-            int c;
-            while ((c = fileReader.read(buf)) > 0) {
-
-                if (c < 256) {
-                    buf = Arrays.copyOf(buf, c);
-                }
-
-                data = new String(buf);
-                document = builder.parse(new InputSource(new StringReader(data)));
+                document = builder.parse(new InputSource(fileReader));
                 list = document.getDocumentElement().getElementsByTagName("visitor");
                 for (int i = 0; i < list.getLength(); i++) {
                     String name = list.item(i).getAttributes().getNamedItem("name").getNodeValue();
@@ -92,7 +85,6 @@ public class XmlReaderAndWriter {
                     concurrentSkipListSetashSet.add(new Kid(name, age));
                     imported = true;
                 }
-            }
         }
         catch(org.xml.sax.SAXException e){
             System.out.println("SAXException");

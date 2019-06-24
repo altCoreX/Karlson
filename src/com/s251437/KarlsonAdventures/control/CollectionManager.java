@@ -10,6 +10,7 @@ public class CollectionManager {
     private ConcurrentSkipListSet<Kid> collection;
     private Date initDate;
     private File fileForIO;
+    private boolean isStopped = false;
 
     private XmlReaderAndWriter manager = new XmlReaderAndWriter();
 
@@ -76,10 +77,10 @@ public class CollectionManager {
 
     public String add(Kid element) {
         if (collection.add(element)) {
-            return "Элемент добавлен.";
+            return String.format("Элемент <<%1$s>> добавлен.", element.toString());
         }
         else {
-            return "Элемент не добавлен.";
+            return String.format("Элемент <<%1$s>> не добавлен.", element.toString());
         }
     }
 
@@ -143,7 +144,19 @@ public class CollectionManager {
         return "Выполняется сохранение коллекции и закрытие программы.";
     }
 
+    public String save() {
+        manager.write(collection, fileForIO);
+        return "Выполняется сохранение коллекции.";
+    }
+
     public ConcurrentSkipListSet<Kid> getCollection(){
         return collection;
+    }
+
+    public void stop(){
+        isStopped = true;
+    }
+    public boolean isStopped(){
+        return isStopped;
     }
 }

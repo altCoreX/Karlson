@@ -1,6 +1,7 @@
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.s251437.KarlsonAdventures.Kid;
+import com.s251437.KarlsonAdventures.Message;
 import com.s251437.KarlsonAdventures.control.CollectionManager;
 import protocols.Client;
 
@@ -45,18 +46,33 @@ public class CommandHandler {
             switch (keyWords[0]) {
                 case "import":
                     ConcurrentSkipListSet<Kid> collection = manager.getCollection();
-                    for(Kid kid:collection) {
-                        String command = String.format("add %1$s", kid.toJson());
-                        client.send(command);
-                        continue;
-                    }
+                    Message message = new Message("collection");
+                    message.setKids(collection);
+                    client.send(message);
+                    break;
+                case "show":
+                    System.out.println("Коллекция на клиенте: " + manager.getCollection());
+                    client.send(new Message(fullCommand));
                     break;
                 case "stop":
                     isStopped = true;
-                    client.send(fullCommand);
+                    break;
+                case "load":
+                    client.send(new Message(fullCommand));
+                    Message msg = client.recieve();
+                    ConcurrentSkipListSet<Kid> kids = msg.getKids();
+                    int length = kids.size();
+                    int added = 0;
+                    for(Kid kid:kids){
+                        if(manager.getCollection().add(kid)){
+                            added++;
+                        }
+                    }
+                    System.out.println(String.format("Добавлено %1$d/%2$d.", added, length));
                     break;
                 default:
-                    client.send(fullCommand);
+                    client.send(new Message(fullCommand));
+                    break;
 
             }
 

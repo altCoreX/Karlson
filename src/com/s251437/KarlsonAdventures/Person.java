@@ -1,6 +1,8 @@
 package com.s251437.KarlsonAdventures;
 
-abstract public class Person implements Observable {
+import java.io.Serializable;
+
+abstract public class Person implements Observable, Serializable {
 
     private String name;
     private byte age;

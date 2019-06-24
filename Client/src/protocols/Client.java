@@ -8,6 +8,6 @@ public interface Client {
 
     void setPort(int port);
     void bind(int port);
-    void send(String command);
-    void recieve();
+    void send(Message message);
+    Message recieve();
 }

@@ -11,12 +11,10 @@ import java.util.Scanner;
 
 public class CommandHandler {
     private CollectionManager manager;
-    private boolean isStopped;
 
     public CommandHandler(CollectionManager collectionManager) {
         manager = collectionManager;
         if (collectionManager != null) manager = collectionManager;
-        isStopped = false;
     }
 
 
@@ -37,10 +35,12 @@ public class CommandHandler {
     }
 
     public String control(String command) {
-            String[] fullCommand = command.trim().split(" ", 2);;
-            Gson gson = new Gson();
-            String answer;
+        String[] fullCommand = command.trim().split(" ", 2);
+        ;
+        Gson gson = new Gson();
+        String answer;
 
+        synchronized (this) {
             switch (fullCommand[0]) {
                 case "remove_lower":
                 case "remove":
@@ -69,8 +69,7 @@ public class CommandHandler {
                 case "import":
                     try {
                         return manager.importItem(fullCommand[1]);
-                    }
-                    catch (ArrayIndexOutOfBoundsException e) {
+                    } catch (ArrayIndexOutOfBoundsException e) {
                         return "Неверный аргумент.";
                     }
                 case "info":
@@ -78,13 +77,22 @@ public class CommandHandler {
                 case "show":
                     return manager.show();
                 case "stop":
-                    manager.show();
-                    isStopped = true;
                     return manager.finishWork();
+                case "save":
+                    return manager.save();
+                case "wait":
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    return "Wait";
+                case "load":
                 default:
                     return "Ошибка, Неизвестная команда.";
 
             }
-        return "Ошибка, Неизвестная команда.";
+            return "Ошибка, Неизвестная команда.";
+        }
     }
 }

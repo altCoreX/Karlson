@@ -1,5 +1,6 @@
 package protocols.udp;
 
+import com.s251437.KarlsonAdventures.Kid;
 import com.s251437.KarlsonAdventures.Message;
 import protocols.Client;
 
@@ -8,8 +9,9 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.Arrays;
+import java.util.concurrent.ConcurrentSkipListSet;
 
-public class DatagramSocketClient implements Client {
+public class DatagramSocketClient implements Client  {
     private DatagramSocket client;
     private int port;
     private int selfPort;
@@ -17,11 +19,10 @@ public class DatagramSocketClient implements Client {
     private InetAddress addr;
     int packetSize;
 
-    public DatagramSocketClient(int port, InetAddress addr){
-        try{
+    public DatagramSocketClient(int port, InetAddress addr) {
+        try {
             client = new DatagramSocket();
-        }
-        catch(java.net.SocketException e){
+        } catch (java.net.SocketException e) {
             System.out.println("Ошибка создания сокета: " + e);
         }
         this.port = port;
@@ -31,11 +32,11 @@ public class DatagramSocketClient implements Client {
         packetSize = 1024;
     }
 
-    public void setPort(int port){
+    public void setPort(int port) {
         this.port = port;
     }
 
-    private byte[] serializator(Serializable object){
+    private byte[] serializator(Serializable object) {
         try {
             ByteArrayOutputStream byteAOS = new ByteArrayOutputStream();
             ObjectOutputStream objOS = new ObjectOutputStream(byteAOS);
@@ -44,20 +45,20 @@ public class DatagramSocketClient implements Client {
             objOS.close();
             byte[] data = byteAOS.toByteArray();
             return data;
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             System.out.println("Ошибка потока: " + e);
         }
         return null;
     }
 
-    private Message deserializator(byte[] response) throws IOException, ClassNotFoundException{
-            ByteArrayInputStream byteAIS = new ByteArrayInputStream(response);
-            ObjectInputStream objIS = new ObjectInputStream(byteAIS);
-            Message command = (Message) objIS.readObject();
-            return command;
+    private Message deserializator(byte[] response) throws IOException, ClassNotFoundException {
+        ByteArrayInputStream byteAIS = new ByteArrayInputStream(response);
+        ObjectInputStream objIS = new ObjectInputStream(byteAIS);
+        Message command = (Message) objIS.readObject();
+        return command;
     }
 
+    /*
     private void sendArrays(byte[] array){
         int a = 0;
         int b = packetSize;
@@ -70,19 +71,20 @@ public class DatagramSocketClient implements Client {
         }
         sendArray(Arrays.copyOfRange(array, a, length));
     }
+    */
 
-    private void sendArray(byte[] data){
+    /*
+    private void sendArray(byte[] data) {
         try {
             DatagramPacket packet = new DatagramPacket(data, data.length, addr, port);
             client.send(packet);
-        }
-        catch (IOException e){
+        } catch (IOException e) {
             System.out.println("Ошибка ввода-вывода: " + e);
         }
     }
+*/
 
-    public void send(String command){
-        Message message = new Message(command);
+    public void send(Message message) {
         byte[] serializedMessage = serializator(message);
         DatagramPacket packet = new DatagramPacket(serializedMessage, serializedMessage.length, addr, port);
         try {
@@ -95,16 +97,17 @@ public class DatagramSocketClient implements Client {
             try {
                 Message msg = deserializator(buffer);
                 System.out.println(msg.getCommand());
-            }
-            catch (ClassNotFoundException e){
+            } catch (ClassNotFoundException e) {
                 System.out.println("Ошибка в сериализации: " + e);
             }
-        }
-        catch (java.io.IOException e){
+        } catch (java.net.SocketTimeoutException e) {
+            System.out.println("Время ожидания вышло.");
+        } catch (IOException e) {
             System.out.println("Ошибка ввода-вывода: " + e);
         }
     }
 
+/*
     public void send(Message message){
         try {
             byte[] serializedMessage = serializator(message);
@@ -121,10 +124,30 @@ public class DatagramSocketClient implements Client {
             System.out.println("Ошибка потока: " + e);
         }
     }
+    */
 
-    public void recieve(){}
+    public Message recieve() {
+        try {
+            byte[] buffer = new byte[1024];
+            DatagramPacket response = new DatagramPacket(buffer, buffer.length);
+            client.setSoTimeout(10000);
+            client.receive(response);
+            try {
+                Message msg = deserializator(buffer);
+                return msg;
 
-    public void bind(int port){
+            } catch (ClassNotFoundException e) {
+                System.out.println("Ошибка в сериализации: " + e);
+            }
+        } catch (java.net.SocketTimeoutException e) {
+            System.out.println("Время ожидания вышло.");
+        } catch (IOException e) {
+            System.out.println("Ошибка ввода-вывода: " + e);
+        }
+        return new Message("collection");
+    }
+
+    public void bind(int port) {
         this.port = port;
     }
 }

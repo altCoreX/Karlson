@@ -11,13 +11,11 @@ import java.nio.channels.DatagramChannel;
 public class MultiThreadServer {
     private DatagramChannel channel;
     private int port;
-    private boolean connected;
     private ByteBuffer in;
     private ByteBuffer out;
     private SocketAddress address;
     private DatagramSocket socket;
     private CollectionManager manager;
-    boolean stopped = false;
 
     public MultiThreadServer(int port) throws java.io.IOException{
         this.port = port;
@@ -27,7 +25,6 @@ public class MultiThreadServer {
         address = new InetSocketAddress(port);
         socket = channel.socket();
         socket.bind(address);
-        connected = true;
     }
 
     public void setPort(int port){
@@ -35,7 +32,7 @@ public class MultiThreadServer {
     }
 
     public void start(){
-        while (!stopped) {
+        while (!manager.isStopped()) {
             try {
                 in = ByteBuffer.allocate(1024);
                 SocketAddress addr = channel.receive(in);

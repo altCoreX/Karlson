@@ -1,17 +1,20 @@
-package com.s251437.KarlsonAdventures;
+package com.s251437.KarlsonAdventures.journey;
 
 import java.io.Serializable;
+import java.time.ZonedDateTime;
 
 abstract public class Person implements Observable, Serializable {
 
     private String name;
     private byte age;
+    private ZonedDateTime initDateTime;
 
     private double pulse = 60.0f + Math.random()*2;
 
     Person (String name, byte age) {
         this.name = name;
         this.age = age;
+        initDateTime = java.time.ZonedDateTime.now();
     }
 
 
@@ -39,13 +42,21 @@ abstract public class Person implements Observable, Serializable {
         }
     }
 
+    public ZonedDateTime getInitDateTime() {
+        return initDateTime;
+    }
+
     public short getAge(){
         return this.age;
     }
 
     @Override
     public int hashCode() {
-        return String.format("%s %d", name, age).hashCode();
+        int result = 17;
+        result = 31 * result + name.hashCode();
+        result = 31 * result + age;
+        result = 31 * result + initDateTime.hashCode();
+        return result;
     }
 
     @Override

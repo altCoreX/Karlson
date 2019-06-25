@@ -1,9 +1,8 @@
-package com.s251437.KarlsonAdventures;
+package com.s251437.KarlsonAdventures.journey;
 
 import com.s251437.KarlsonAdventures.exceptions.EmptyEventsListException;
 
 import java.util.Arrays;
-import java.util.HashSet;
 
 public class Journey {
     private Kid kid;

@@ -2,11 +2,14 @@ package protocols.udp;
 
 import com.s251437.KarlsonAdventures.control.CollectionManager;
 import com.s251437.KarlsonAdventures.control.CommandHandler;
+import db.DatabaseManager;
 
 import java.io.IOException;
 import java.net.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MultiThreadServer {
     private DatagramChannel channel;
@@ -16,6 +19,8 @@ public class MultiThreadServer {
     private SocketAddress address;
     private DatagramSocket socket;
     private CollectionManager manager;
+    private DatabaseManager dbmg;
+    private Map sessions;
 
     public MultiThreadServer(int port) throws java.io.IOException{
         this.port = port;
@@ -25,6 +30,8 @@ public class MultiThreadServer {
         address = new InetSocketAddress(port);
         socket = channel.socket();
         socket.bind(address);
+        sessions = new HashMap<String, String>();
+        dbmg = new DatabaseManager(sessions);
     }
 
     public void setPort(int port){
@@ -37,7 +44,7 @@ public class MultiThreadServer {
                 in = ByteBuffer.allocate(1024);
                 SocketAddress addr = channel.receive(in);
                 System.out.println("Получено.");
-                MonoThreadServer thread = new MonoThreadServer(in, manager, channel, addr);
+                MonoThreadServer thread = new MonoThreadServer(in, manager, dbmg, sessions, channel, addr);
                 thread.start();
             }
             catch (IOException e){

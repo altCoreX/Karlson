@@ -8,8 +8,12 @@
         </element>
         <element id="module-output" name="Server" />
         <element id="module-output" name="Karlson" />
+        <element id="library" level="project" name="org.postgresql:postgresql:42.2.5" />
+        <element id="library" level="project" name="javax.mail" />
       </element>
       <element id="library" level="project" name="com.google.code.gson:gson:2.8.0" />
+      <element id="library" level="project" name="javax.mail" />
+      <element id="library" level="project" name="org.postgresql:postgresql:42.2.5" />
     </root>
   </artifact>
 </component>

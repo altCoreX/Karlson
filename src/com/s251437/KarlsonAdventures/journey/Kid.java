@@ -1,4 +1,4 @@
-package com.s251437.KarlsonAdventures;
+package com.s251437.KarlsonAdventures.journey;
 
 import java.io.Serializable;
 import java.util.Comparator;
@@ -30,12 +30,6 @@ public class Kid extends Person implements Updatable, Serializable, Comparable<K
     @Override
     public String toString() {
         return String.format("%1$s: %2$d", getName(), getAge());
-    }
-
-    @Override
-    public int hashCode(){
-        int result;
-        return 2;
     }
 
     @Override

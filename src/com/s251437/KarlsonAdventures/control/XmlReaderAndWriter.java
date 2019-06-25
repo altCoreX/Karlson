@@ -1,6 +1,6 @@
 package com.s251437.KarlsonAdventures.control;
 
-import com.s251437.KarlsonAdventures.Kid;
+import com.s251437.KarlsonAdventures.journey.Kid;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -15,7 +15,6 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.*;
-import java.util.Arrays;
 import java.util.Scanner;
 import java.util.concurrent.ConcurrentSkipListSet;
 

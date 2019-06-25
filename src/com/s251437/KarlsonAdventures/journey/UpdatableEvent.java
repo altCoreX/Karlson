@@ -1,4 +1,4 @@
-package com.s251437.KarlsonAdventures;
+package com.s251437.KarlsonAdventures.journey;
 
 
 public class UpdatableEvent extends Event implements Updatable {

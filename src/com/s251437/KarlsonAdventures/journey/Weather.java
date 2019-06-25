@@ -1,4 +1,4 @@
-package com.s251437.KarlsonAdventures;
+package com.s251437.KarlsonAdventures.journey;
 
 public enum Weather {RAINING(0.25f, 1.2f, "дождливая"), CLEAR(0.45f, 1f, "спокойная"), WINDY(0.35f, 1.3f, "ветренная"), HELL(0.0f, 666.0f, "АДСКАЯ");
     final double Chance;

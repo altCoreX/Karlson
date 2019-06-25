@@ -1,4 +1,4 @@
-package com.s251437.KarlsonAdventures;
+package com.s251437.KarlsonAdventures.journey;
 
 import com.s251437.KarlsonAdventures.exceptions.EmptyEventsListException;
 

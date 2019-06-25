@@ -1,6 +1,6 @@
 package com.s251437.KarlsonAdventures.control;
 
-import com.s251437.KarlsonAdventures.Kid;
+import com.s251437.KarlsonAdventures.journey.Kid;
 
 import java.io.*;
 import java.util.*;

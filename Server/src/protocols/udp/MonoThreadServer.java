@@ -22,6 +22,7 @@ public class MonoThreadServer extends Thread {
     private SocketAddress addr;
     private ServerCommandHandler commandHandler;
     private CollectionManager manager;
+    private Map sessions;
 
 
     MonoThreadServer(ByteBuffer in, CollectionManager manager, DatabaseManager dbmg, Map sessions, DatagramChannel channel, SocketAddress addr) {
@@ -29,6 +30,7 @@ public class MonoThreadServer extends Thread {
         this.in = in;
         this.addr = addr;
         this.channel = channel;
+        this.sessions = sessions;
         commandHandler = new ServerCommandHandler(manager, dbmg, sessions);
     }
 
@@ -38,23 +40,41 @@ public class MonoThreadServer extends Thread {
             try {
                 Message message = messageDeserializator(in.array());
                 if (message.isKids()) {
-                    ConcurrentSkipListSet<Kid> collection = message.getKids();
-                    int length = collection.size();
-                    int added = 0;
-                    for (Kid kid : collection) {
-                        if (manager.getCollection().add(kid)) {
-                            added++;
+                    if(!sessions.isEmpty() && sessions.get(message.getSID()).equals(message.getLogin())) {
+                        ConcurrentSkipListSet<Kid> collection = message.getKids();
+                        int length = collection.size();
+                        int added = 0;
+                        for (Kid kid : collection) {
+                            if (manager.getCollection().add(kid)) {
+                                added++;
+                            }
                         }
+                        String answer = String.format("Добавлено %1$d/%2$d элементов.", added, length);
+                        sendAnswer(answer);
                     }
-                    String answer = String.format("Добавлено %1$d/%2$d элементов.", added, length);
-                    sendAnswer(answer);
+                    else {
+                        String answer = "Авторизируйтесь!";
+                        sendAnswer(answer);
+                    }
                 } else {
                     String command = message.getCommand();
-                    if (command.equals("load")) {
+                    System.out.println("Команда: " + command);
+                    String[] pcmd = command.trim().split(" ", 3);
+                    if (pcmd[0].equals("load")) {
                         Message collectionMsg = new Message("collection");
                         collectionMsg.setKids(manager.getCollection());
                         sendMessage(new Message("Отправка коллекции..."));
                         sendMessage(collectionMsg);
+                    } if(pcmd[0].equals("login")){
+                        String SID = commandHandler.control(command, message.getLogin(), message.getSID());
+                        Message msg = new Message("Авторизация...");
+                        msg.setSID(SID);
+                        System.out.println(msg.getSID());
+                        System.out.println(pcmd[1]);
+                        if(SID != null) {
+                            sessions.put(SID, pcmd[1]);
+                        }
+                        sendMessage(msg);
                     } else {
                         System.out.println("Команда " + command + " от " + addr.toString());
                         String answer = commandHandler.control(command, message.getLogin(), message.getSID());

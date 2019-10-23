@@ -117,7 +117,7 @@ public class DatagramSocketClient implements Client  {
         try {
             byte[] buffer = new byte[1024];
             DatagramPacket response = new DatagramPacket(buffer, buffer.length);
-            client.setSoTimeout(10000);
+            client.setSoTimeout(100000);
             client.receive(response);
             try {
                 Message msg = messageDeserializator(buffer);

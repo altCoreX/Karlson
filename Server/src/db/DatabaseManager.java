@@ -9,11 +9,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import static java.lang.System.currentTimeMillis;
+import static java.lang.System.setOut;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 public class DatabaseManager {
     private Map sessions;
     private PostgreDatabase db;
-    private EmailClient emailClient = new EmailClient("labaratorybot@yandex.ru", "1337Bot");
+    private EmailClient emailClient = new EmailClient("lababot22@yandex.ru", "1337Bot");
 
     public DatabaseManager(Map<String, String> sessions){
         this.sessions = sessions;
@@ -31,13 +35,15 @@ public class DatabaseManager {
                 String loginDB = rs.getString("login");
                 String passwordDB = rs.getString("password");
                 System.out.println();
-                if (loginDB.equals(login) && passwordDB.equals(password)){
+                if (loginDB.equals(login) && passwordDB.equals(MD2(password))){
                     String SID = generateSessionId();
                     sessions.put(SID, login);
                     return SID;
+                } else {
+                    return null;
                 }
             } else {
-                return "Для начала зарегистрируйтесь.";
+                return null;
             }
         }
         catch (SQLException e){
@@ -47,19 +53,21 @@ public class DatabaseManager {
     }
 
     public String register(String email, String login) {
-        if (email.matches(".+@.+\\..+")) {
+        System.out.println(email);
+        if (email.matches("[\\d\\w]+[\\d\\w\\.]+@[\\d\\w\\.]+\\.[\\d\\w\\.]+")) {
             try {
                 ResultSet rs = getUserInfo(login);
                 if (rs.next()) {
                     return "Учетная запись существует.";
                 } else {
                     String password = generatePassword();
-                    String addUser = String.format("insert into account (password, email, login) values (%1$s,%2$s,%3$s);",
-                            password, email, login);
+                    String passhash = MD2(password);
+                    String addUser = String.format("insert into \"251437\".account (password, email, login) values ('%1$s' ,'%2$s', '%3$s');",
+                            passhash, email, login);
                     db.execute(addUser);
                     String subject = "Registration in BOT";
                     String text = String.format("Hello, %1$s, your password is %2$s.", login, password);
-                    //emailClient.send(subject, text, email);
+                    emailClient.send(subject, text, email);
                     return "Пароль выслан вам на почту.";
                 }
             } catch (SQLException e) {
@@ -73,8 +81,25 @@ public class DatabaseManager {
 
     }
 
+    public static String MD2(String input) {
+        try {
+            // getInstance() method is called with algorithm MD2
+            MessageDigest md = MessageDigest.getInstance("MD2");
+            byte[] messageDigest = md.digest(input.getBytes());
+            BigInteger no = new BigInteger(1, messageDigest);
+            String hashtext = no.toString(16);
+            while (hashtext.length() < 32) {
+                hashtext = "0" + hashtext;
+            }
+            return hashtext;
+        }
+        catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private ResultSet getUserInfo(String login) throws SQLException{
-            String loginSQL = String.format("select * from account where login like '%s';", login);
+            String loginSQL = String.format("SELECT t.*, CTID FROM \"251437\".account t where login like '%s';", login);
         return db.get(loginSQL);
     }
 

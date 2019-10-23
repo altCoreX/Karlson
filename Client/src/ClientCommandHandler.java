@@ -23,7 +23,9 @@ public class ClientCommandHandler extends CommandHandler {
         String command;
 
         try {
-            System.out.println("Введите команду");
+            System.out.println();
+            System.out.println("Введите команду:");
+            System.out.println();
             command = scanner.nextLine();
         } catch (NoSuchElementException ex) {
             command = "stop";
@@ -52,12 +54,9 @@ public class ClientCommandHandler extends CommandHandler {
                     isStopped = true;
                     break;
                 case "login":
-                    client.send(new Message(fullCommand));
-                    Message answ = client.recieve();
-                    System.out.println("LOGIN");
+                    Message answ = client.send(new Message(fullCommand));
                     if (answ.getSID() != null) {
                         client.setLogin(keyWords[1]);
-                        System.out.println("Логин - " + keyWords[1]);
                         client.setSID(answ.getSID());
                     }
                     break;

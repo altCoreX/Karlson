@@ -1,9 +1,9 @@
 package db;
 
+import java.util.*;
 import javax.mail.*;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-import java.util.Properties;
+import javax.mail.internet.*;
+import javax.activation.*;
 
 public class EmailClient {
 
@@ -24,6 +24,17 @@ public class EmailClient {
     }
 
     public void send(String subject, String text, String toEmail) {
+        System.out.println(username);
+        System.out.println(password);
+        String to = toEmail;
+
+        // Sender's email ID needs to be mentioned
+        String from = username;
+
+        // Assuming you are sending email from localhost
+        String host = "yandex.ru";
+
+        // Get the default Session object.
         Session session = Session.getDefaultInstance(props, new Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(username, password);
@@ -31,20 +42,26 @@ public class EmailClient {
         });
 
         try {
-            Message message = new MimeMessage(session);
-            //от кого
-            message.setFrom(new InternetAddress(username));
-            //кому
-            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
-            //тема сообщения
+            // Create a default MimeMessage object.
+            MimeMessage message = new MimeMessage(session);
+
+            // Set From: header field of the header.
+            message.setFrom(new InternetAddress(from));
+
+            // Set To: header field of the header.
+            message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+
+            // Set Subject: header field
             message.setSubject(subject);
-            //текст
+
+            // Now set the actual message
             message.setText(text);
 
-            //отправляем сообщение
+            // Send message
             Transport.send(message);
-        } catch (MessagingException e) {
-            throw new RuntimeException(e);
+            System.out.println("Sent message successfully....");
+        } catch (MessagingException mex) {
+            mex.printStackTrace();
         }
     }
 }

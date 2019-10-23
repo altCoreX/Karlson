@@ -25,7 +25,7 @@ public class ServerCommandHandler extends CommandHandler {
         } else if(sessions.size() != 0 && sessions.get(SID).equals(login)) {
             return commandSwitcher(fullCommand);//выполнение комманд.
         } else{
-            return "Авторизируйтесь.";
+            return "Авторизируйтесь!";
         }
     }
 

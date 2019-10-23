@@ -1,12 +1,16 @@
 package com.s251437.KarlsonAdventures.journey;
 
 import java.io.Serializable;
+import java.time.ZonedDateTime;
 import java.util.Comparator;
+import java.time.OffsetDateTime;
 
 public class Kid extends Person implements Updatable, Serializable, Comparable<Kid> {
 
+    private  OffsetDateTime init;
     public Kid(String name, byte age) {
         super(name, age);
+        init = OffsetDateTime.now();
     }
 
     public String toJson(){

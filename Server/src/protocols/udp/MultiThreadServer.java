@@ -10,6 +10,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class MultiThreadServer {
     private DatagramChannel channel;
@@ -30,7 +31,7 @@ public class MultiThreadServer {
         address = new InetSocketAddress(port);
         socket = channel.socket();
         socket.bind(address);
-        sessions = new HashMap<String, String>();
+        sessions = new ConcurrentHashMap<String, String>();
         dbmg = new DatabaseManager(sessions);
     }
 
@@ -43,7 +44,7 @@ public class MultiThreadServer {
             try {
                 in = ByteBuffer.allocate(1024);
                 SocketAddress addr = channel.receive(in);
-                System.out.println("Получено.");
+                System.out.println("Получена команда.");
                 MonoThreadServer thread = new MonoThreadServer(in, manager, dbmg, sessions, channel, addr);
                 thread.start();
             }

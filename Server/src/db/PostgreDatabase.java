@@ -3,9 +3,9 @@ package db;
 import java.sql.*;
 
 public class PostgreDatabase implements Database {
-    private static final String DB_URL = "jdbc:postgresql://pg:5432/studs";
-    private static final String USER = "s251437";
-    private static final String PASS = "rum210";
+    private static final String DB_URL = "jdbc:postgresql://localhost:5432/postgres";
+    private static final String USER = "postgres";
+    private static final String PASS = "1337dflbv";
     private Connection connection;
     private Statement statement;
 

@@ -1,7 +1,12 @@
 package protocols.udp;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.s251437.KarlsonAdventures.control.CollectionManager;
 import com.s251437.KarlsonAdventures.control.CommandHandler;
+import com.s251437.KarlsonAdventures.control.ReadElementFromJsonException;
+import com.s251437.KarlsonAdventures.control.Utils;
+import com.s251437.KarlsonAdventures.journey.Kid;
 import db.DatabaseManager;
 
 import java.util.HashMap;
@@ -23,21 +28,68 @@ public class ServerCommandHandler extends CommandHandler {
         if(login == null || SID == null){
             return authControl(fullCommand);//авторизация
         } else if(sessions.size() != 0 && sessions.get(SID).equals(login)) {
-            return commandSwitcher(fullCommand);//выполнение комманд.
+            return commandSwitcher(fullCommand, login);//выполнение комманд.
         } else{
             return "Авторизируйтесь!";
         }
     }
 
-    @Override
-    protected String commandSwitcher(String[] fullCommand) {
-        String collectionAnswer = collectionControl(fullCommand);
+    protected String commandSwitcher(String[] fullCommand, String login) {
+        String collectionAnswer = collectionControl(fullCommand, login);
         synchronized (this) {
             if (collectionAnswer != "null") {
                 return collectionAnswer;
             } else {
                 return serverControl(fullCommand);
             }
+        }
+    }
+
+    private String collectionControl(String[] fullCommand, String login) {
+        Gson gson = new Gson();
+        try {
+            switch (fullCommand[0]) {
+                case "remove_lower":
+                case "remove":
+                case "add":
+                case "add_if_min":
+                    try {
+                        Kid element = Utils.getElementFromJSON(gson, fullCommand[1]);
+                        element.setOwner(login);
+                        switch (fullCommand[0]) {
+                            case "remove":
+                                return manager.remove(element);
+                            case "remove_lower":
+                                return manager.removeLower(element);
+                            case "add_if_min":
+                                return manager.addIfMin(element);
+                            case "add":
+                                return manager.add(element);
+                        }
+                    } catch (JsonSyntaxException ex) {
+                        return "Ошибка, элемент задан неверно. Используйте формат JSON.";
+                    } catch (ReadElementFromJsonException ex) {
+                        return ex.toString();
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                        return "Неверный аргумент.";
+                    }
+                    break;
+                case "import":
+                    return manager.importItem(fullCommand[1]);
+                case "info":
+                    return manager.info();
+                case "show":
+                    return manager.show();
+                case "stop":
+                    return manager.finishWork();
+                case "save":
+                    return manager.save();
+
+
+            }
+            return "null";
+        } catch (ArrayIndexOutOfBoundsException e) {
+            return "Неверный аргумент.";
         }
     }
 

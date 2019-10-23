@@ -17,16 +17,16 @@ public class CommandHandler {
         return commandSwitcher(fullCommand);
     }
 
-    protected String commandSwitcher(String[] fullCommand){
+    private String commandSwitcher(String[] fullCommand){
         String collectionAnswer = collectionControl(fullCommand);
-        if (collectionAnswer != "null"){
+        if (!collectionAnswer.equals("null")){
             return collectionAnswer;
         } else {
             return "Ошибка, Неизвестная команда.";
         }
     }
 
-    protected String collectionControl(String[] fullCommand) {
+    private String collectionControl(String[] fullCommand) {
         Gson gson = new Gson();
         try {
         switch (fullCommand[0]) {
